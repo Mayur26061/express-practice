@@ -4,7 +4,7 @@ const bodyparser = require("body-parser")
 const app = express()
 const port = 8080
 
-const middleware = (req,res,next)=>{
+const middleware = (req, res, next) => {
     console.log("Middleware")
 
     next()
@@ -12,28 +12,39 @@ const middleware = (req,res,next)=>{
 
 // app.use(middleware)
 app.use(bodyparser.json())
-const fib = (n)=>{
-    let a = 0, b = 1, c, i;
-    if( n == 0)
-        return a;
-    for(i = 2; i <= n; i++)
-    {
-    c = a + b;
-    a = b;
-    b = c;
+const calculateSum = (value) => {
+    sum = 0;
+    for (let i = 0; i <= value; i++) {
+        sum += i;
     }
-    return b;
+    return sum
 }
-const postCr = (req,res)=>{
-    res.send("This is post")
+const calculateMul = (value) => {
+    ans = 1;
+    for (let i = 1; i <= value; i++) {
+        ans *= i;
+    }
+    return ans
 }
-app.post('/handle',(req,res)=>{
+// const postCr = (req,res)=>{
+//     res.send("This is post")
+// }
+app.post('/handle', (req, res) => {
     // let a = req.headers.counter using header
-    // let a = req.query.counter with query ?counter=10
-    console.log(req.body)
-    console.log("Gettin")
-    let a = req.body.counter 
-    res.send("fibs "+fib(a))
+    // let a = req.query.counter with query ?counter=1
+    let a = req.body.counter
+
+    if (a < 100) {
+        const sum = calculateSum(a)
+        const mult = calculateMul(a)
+        const obj = {
+            sum,
+            mult
+        }
+        res.status(201).send(obj)
+    } else {
+        res.status(411).send("Length Error")
+    }
 })
 // app.post('/posting',postCr)
 // app.put('/putt',(req,res)=>{
@@ -42,6 +53,6 @@ app.post('/handle',(req,res)=>{
 // app.delete('/delete',(res,rep)=>{
 //     rep.send("Testing Delete")
 // })
-app.listen(port,()=>{
+app.listen(port, () => {
     console.log("Server connected")
 })
